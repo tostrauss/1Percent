@@ -1,8 +1,9 @@
-// 1Percent Training - Interactive Soccer Website
-// Created for Nathan Tau & Luca Winterton
+// 1Percent Training - Modern Interactive Website with Booking System
+// Updated version with dark mode and interactive booking
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all interactive components
+    initThemeToggle();
     initFloatingSoccerBalls();
     initContactForm();
     initTestimonialSlider();
@@ -10,12 +11,329 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initSkillMeter();
     initTrainingLocationMap();
+    
+    // Initialize booking system if on schedule page
+    if (document.getElementById('bookingCalendar')) {
+        initBookingSystem();
+    }
 
     // Add a welcome animation
     setTimeout(function() {
         showWelcomeMessage();
     }, 1000);
 });
+
+// ===== THEME TOGGLE (DARK MODE) =====
+function initThemeToggle() {
+    const toggleSwitch = document.querySelector('#checkbox');
+    if (!toggleSwitch) return;
+    
+    // Check for saved theme preference
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        toggleSwitch.checked = true;
+    }
+    
+    // Event listener for theme switch
+    toggleSwitch.addEventListener('change', switchTheme);
+    
+    function switchTheme(e) {
+        if (e.target.checked) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+}
+
+// ===== BOOKING SYSTEM =====
+function initBookingSystem() {
+    // Initialize variables
+    let currentDate = new Date();
+    let selectedDate = null;
+    let selectedTimeSlot = null;
+    
+    // Generate availability data (in a real app, this would come from a backend)
+    const availabilityData = generateAvailabilityData();
+    
+    // Initialize calendar
+    renderCalendar(currentDate);
+    
+    // Event listeners
+    document.getElementById('prevMonth').addEventListener('click', function() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
+    
+    document.getElementById('nextMonth').addEventListener('click', function() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
+    
+    document.getElementById('todayBtn').addEventListener('click', function() {
+        currentDate = new Date();
+        renderCalendar(currentDate);
+    });
+    
+    // Modal Controls
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('bookingModal').style.display = 'none';
+    });
+    
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('bookingModal')) {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+    });
+    
+    // Service Selection
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove selected class from all cards
+            serviceCards.forEach(c => c.classList.remove('selected'));
+            
+            // Add selected class to clicked card
+            this.classList.add('selected');
+            
+            // Show/hide team size input based on service
+            const service = this.getAttribute('data-service');
+            document.getElementById('teamSizeGroup').style.display = 
+                service === 'team-training' ? 'block' : 'none';
+        });
+    });
+    
+    // Form submission
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Here you would typically send the data to a backend
+        // For this demo, we'll just show an alert
+        alert('Booking confirmed! You will receive a confirmation email shortly.');
+        
+        // Close the modal
+        document.getElementById('bookingModal').style.display = 'none';
+    });
+    
+    // Generate calendar
+    function renderCalendar(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        
+        // Update month title
+        document.getElementById('currentMonth').textContent = 
+            new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(date);
+        
+        // Get first day of month and last day of month
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        
+        // Get the day of the week for the first day (0 = Sunday, 6 = Saturday)
+        const firstDayIndex = firstDay.getDay();
+        
+        // Get total days in the month
+        const totalDays = lastDay.getDate();
+        
+        // Get total days from previous month to show
+        const prevMonthDays = firstDayIndex;
+        
+        // Get total days from next month to show (to fill 6 rows)
+        const totalCells = 42; // 6 rows * 7 days
+        const nextMonthDays = totalCells - (prevMonthDays + totalDays);
+        
+        // Get last day of previous month
+        const prevMonthLastDay = new Date(year, month, 0).getDate();
+        
+        // Get today's date for highlighting
+        const today = new Date();
+        const todayFormatted = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+        
+        // Generate calendar HTML
+        let calendarHTML = '';
+        
+        // Previous month days
+        for (let i = prevMonthDays - 1; i >= 0; i--) {
+            const day = prevMonthLastDay - i;
+            const date = new Date(year, month - 1, day);
+            const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+            
+            calendarHTML += `<td>
+                <div class="date-cell other-month disabled" data-date="${dateFormatted}">
+                    <div class="date-number">${day}</div>
+                    <div class="time-slots"></div>
+                </div>
+            </td>`;
+        }
+        
+        // Current month days
+        for (let i = 1; i <= totalDays; i++) {
+            const date = new Date(year, month, i);
+            const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+            
+            // Check if the date is in the past
+            const isPast = date < new Date(today.setHours(0,0,0,0));
+            
+            // Get availability for this date
+            const availability = availabilityData[dateFormatted] || [];
+            
+            // Create time slots HTML
+            let timeSlotsHTML = '';
+            availability.forEach(slot => {
+                timeSlotsHTML += `
+                    <div class="time-slot ${slot.available ? 'available' : 'booked'}" 
+                         data-time="${slot.time}" 
+                         data-available="${slot.available}">
+                        ${slot.time} ${slot.available ? '<span>Available</span>' : '<span>Booked</span>'}
+                    </div>
+                `;
+            });
+            
+            // Create the cell HTML
+            const cellClass = `date-cell ${dateFormatted === todayFormatted ? 'today' : ''} ${isPast ? 'disabled' : ''} ${availability.length > 0 ? 'has-slots' : ''}`;
+            
+            calendarHTML += `<td>
+                <div class="${cellClass}" data-date="${dateFormatted}">
+                    <div class="date-number">${i}</div>
+                    <div class="time-slots">${timeSlotsHTML}</div>
+                </div>
+            </td>`;
+            
+            // Start a new row after Saturday (6)
+            if ((firstDayIndex + i) % 7 === 0) {
+                calendarHTML += '</tr><tr>';
+            }
+        }
+        
+        // Next month days
+        for (let i = 1; i <= nextMonthDays; i++) {
+            const date = new Date(year, month + 1, i);
+            const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+            
+            calendarHTML += `<td>
+                <div class="date-cell other-month disabled" data-date="${dateFormatted}">
+                    <div class="date-number">${i}</div>
+                    <div class="time-slots"></div>
+                </div>
+            </td>`;
+            
+            // Start a new row if needed
+            if ((firstDayIndex + totalDays + i) % 7 === 0 && i < nextMonthDays) {
+                calendarHTML += '</tr><tr>';
+            }
+        }
+        
+        // Insert the calendar HTML
+        document.getElementById('calendarBody').innerHTML = `<tr>${calendarHTML}</tr>`;
+        
+        // Add event listeners to date cells
+        document.querySelectorAll('.date-cell:not(.disabled)').forEach(cell => {
+            cell.addEventListener('click', function(e) {
+                const timeSlotClicked = e.target.closest('.time-slot');
+                
+                if (timeSlotClicked && timeSlotClicked.getAttribute('data-available') === 'true') {
+                    // Time slot was clicked
+                    selectedTimeSlot = timeSlotClicked.getAttribute('data-time');
+                    selectedDate = this.getAttribute('data-date');
+                    
+                    // Update modal content
+                    const dateParts = selectedDate.split('-');
+                    const formattedDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]), parseInt(dateParts[2]));
+                    
+                    document.getElementById('bookingDate').textContent = 
+                        new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(formattedDate);
+                    document.getElementById('bookingTime').textContent = selectedTimeSlot;
+                    
+                    // Open modal
+                    document.getElementById('bookingModal').style.display = 'flex';
+                }
+            });
+        });
+    }
+    
+    // Generate availability data (mock data for demonstration)
+    function generateAvailabilityData() {
+        const data = {};
+        const today = new Date();
+        
+        // Generate data for the next 60 days
+        for (let i = 0; i < 60; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+            
+            // Skip Sundays
+            if (date.getDay() === 0 && i > 7) continue;
+            
+            const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+            
+            // Generate time slots based on day of week
+            const slots = [];
+            
+            // Monday-Thursday
+            if (date.getDay() >= 1 && date.getDay() <= 4) {
+                // Morning slots
+                slots.push({ time: '8:00 AM - 9:00 AM', available: Math.random() > 0.3 });
+                slots.push({ time: '9:00 AM - 10:00 AM', available: Math.random() > 0.3 });
+                slots.push({ time: '10:00 AM - 11:00 AM', available: Math.random() > 0.3 });
+                slots.push({ time: '11:00 AM - 12:00 PM', available: Math.random() > 0.3 });
+                
+                // Afternoon slots
+                slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
+                
+                // Evening slots
+                slots.push({ time: '6:00 PM - 7:00 PM', available: Math.random() > 0.5 });
+                slots.push({ time: '7:00 PM - 8:00 PM', available: Math.random() > 0.5 });
+                slots.push({ time: '8:00 PM - 9:00 PM', available: Math.random() > 0.5 });
+            }
+            // Friday
+            else if (date.getDay() === 5) {
+                // Morning slots
+                slots.push({ time: '8:00 AM - 9:00 AM', available: Math.random() > 0.3 });
+                slots.push({ time: '9:00 AM - 10:00 AM', available: Math.random() > 0.3 });
+                slots.push({ time: '10:00 AM - 11:00 AM', available: Math.random() > 0.3 });
+                slots.push({ time: '11:00 AM - 12:00 PM', available: Math.random() > 0.3 });
+                
+                // Afternoon slots
+                slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
+                
+                // Evening slots
+                slots.push({ time: '6:00 PM - 7:00 PM', available: Math.random() > 0.5 });
+                slots.push({ time: '7:00 PM - 8:00 PM', available: Math.random() > 0.5 });
+            }
+            // Saturday
+            else if (date.getDay() === 6) {
+                // Morning slots
+                slots.push({ time: '9:00 AM - 10:00 AM', available: Math.random() > 0.5 });
+                slots.push({ time: '10:00 AM - 11:00 AM', available: Math.random() > 0.5 });
+                slots.push({ time: '11:00 AM - 12:00 PM', available: Math.random() > 0.5 });
+                slots.push({ time: '12:00 PM - 1:00 PM', available: Math.random() > 0.5 });
+                
+                // Afternoon slots
+                slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
+            }
+            // Sunday
+            else if (date.getDay() === 0) {
+                // Only afternoon slots
+                slots.push({ time: '1:00 PM - 2:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
+                slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
+            }
+            
+            data[dateFormatted] = slots;
+        }
+        
+        return data;
+    }
+}
 
 // ===== INTERACTIVE SOCCER BACKGROUND =====
 function initFloatingSoccerBalls() {
@@ -414,7 +732,7 @@ function initPackageHighlight() {
         card.addEventListener('mouseenter', function() {
             // Scale up the card slightly
             this.style.transform = 'translateY(-10px) scale(1.02)';
-            this.style.boxShadow = '0 12px 24px rgba(0,0,0,0.15)';
+            this.style.boxShadow = '0 12px 24px var(--shadow-color)';
             this.style.zIndex = '2';
             
             // Highlight the title
@@ -588,6 +906,7 @@ function initSkillMeter() {
                 margin-top: 40px;
                 padding-top: 20px;
                 border-top: 1px solid var(--border-color);
+                transition: border-color 0.3s ease;
             }
             .skill-meters {
                 margin-top: 20px;
@@ -599,19 +918,21 @@ function initSkillMeter() {
                 font-weight: 600;
                 margin-bottom: 5px;
                 color: var(--dark-text);
+                transition: color 0.3s ease;
             }
             .skill-bar {
                 height: 10px;
                 background-color: var(--border-color);
                 border-radius: 5px;
                 overflow: hidden;
+                transition: background-color 0.3s ease;
             }
             .skill-progress {
                 height: 100%;
                 background-color: var(--primary-green);
                 width: 0; /* Will be animated with JS */
                 border-radius: 5px;
-                transition: width 1.5s ease;
+                transition: width 1.5s ease, background-color 0.3s ease;
             }
         `;
         document.head.appendChild(style);
@@ -675,7 +996,8 @@ function initTrainingLocationMap() {
     mapContainer.querySelector('.interactive-map').style.borderRadius = '8px';
     mapContainer.querySelector('.interactive-map').style.position = 'relative';
     mapContainer.querySelector('.interactive-map').style.overflow = 'hidden';
-    mapContainer.querySelector('.interactive-map').style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+    mapContainer.querySelector('.interactive-map').style.boxShadow = '0 2px 8px var(--shadow-color)';
+    mapContainer.querySelector('.interactive-map').style.transition = 'box-shadow 0.3s ease';
     
     // Style map pin
     const mapPin = mapContainer.querySelector('.map-pin');
@@ -686,22 +1008,23 @@ function initTrainingLocationMap() {
     mapPin.style.color = 'var(--primary-green)';
     mapPin.style.fontSize = '24px';
     mapPin.style.cursor = 'pointer';
+    mapPin.style.transition = 'color 0.3s ease';
     
     // Add tooltip style for map pin
     mapPin.querySelector('span').style.position = 'absolute';
     mapPin.querySelector('span').style.bottom = '100%';
     mapPin.querySelector('span').style.left = '50%';
     mapPin.querySelector('span').style.transform = 'translateX(-50%)';
-    mapPin.querySelector('span').style.backgroundColor = 'white';
+    mapPin.querySelector('span').style.backgroundColor = 'var(--card-bg)';
     mapPin.querySelector('span').style.padding = '5px 10px';
     mapPin.querySelector('span').style.borderRadius = '4px';
     mapPin.querySelector('span').style.fontSize = '12px';
     mapPin.querySelector('span').style.color = 'var(--dark-text)';
     mapPin.querySelector('span').style.whiteSpace = 'nowrap';
     mapPin.querySelector('span').style.opacity = '0';
-    mapPin.querySelector('span').style.transition = 'opacity 0.3s';
+    mapPin.querySelector('span').style.transition = 'opacity 0.3s, background-color 0.3s, color 0.3s';
     mapPin.querySelector('span').style.pointerEvents = 'none';
-    mapPin.querySelector('span').style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    mapPin.querySelector('span').style.boxShadow = '0 2px 5px var(--shadow-color)';
     
     // Add hover interaction
     mapPin.addEventListener('mouseenter', function() {

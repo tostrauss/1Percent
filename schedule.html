@@ -1,148 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule & Booking - 1Percent Training</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="script.js"></script>
     <style>
-        /* Dark mode variables */
-        :root {
-            /* Light mode (default) */
-            --primary-green: #2a8a5c;
-            --secondary-blue: #2c6b9a;
-            --light-green: #e8f5e9;
-            --light-blue: #e3f2fd;
-            --accent-color: #ffc107;
-            --dark-bg: #f8f9fa;
-            --light-text: #ffffff;
-            --dark-text: #343a40;
-            --medium-text: #6c757d;
-            --border-color: #dee2e6;
-            --card-bg: #ffffff;
-            --body-bg: #f8f9fa;
-            --header-bg: var(--primary-green);
-            --header-text: #ffffff;
-            --footer-bg: #343a40;
-            --footer-text: #adb5bd;
-            --hover-color: rgba(255, 255, 255, 0.15);
-            --shadow-color: rgba(0, 0, 0, 0.08);
-        }
-        
-        /* Dark mode colors */
-        [data-theme="dark"] {
-            --primary-green: #34b378;
-            --secondary-blue: #4d90c4;
-            --light-green: #1e3b2e;
-            --light-blue: #1d374d;
-            --accent-color: #ffd54f;
-            --dark-bg: #2d3339;
-            --light-text: #e9ecef;
-            --dark-text: #e9ecef;
-            --medium-text: #adb5bd;
-            --border-color: #495057;
-            --card-bg: #212529;
-            --body-bg: #1a1d20;
-            --header-bg: #121618;
-            --header-text: #e9ecef;
-            --footer-bg: #121618;
-            --footer-text: #adb5bd;
-            --hover-color: rgba(0, 0, 0, 0.25);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Global style updates */
-        body {
-            background-color: var(--body-bg);
-            color: var(--dark-text);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        header {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            transition: background-color 0.3s ease;
-        }
-        
-        nav ul li a:hover, nav ul li a:focus {
-            background-color: var(--hover-color);
-        }
-        
-        section {
-            background-color: var(--card-bg);
-            box-shadow: 0 4px 12px var(--shadow-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        /* Dark Mode Toggle */
-        .theme-switch-wrapper {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-        }
-        
-        .theme-switch {
-            display: inline-block;
-            position: relative;
-            height: 26px;
-            width: 50px;
-        }
-        
-        .theme-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--accent-color);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
-        
-        .slider::after {
-            content: '☀️';
-            position: absolute;
-            left: 8px;
-            top: 4px;
-            font-size: 12px;
-        }
-        
-        input:checked + .slider::after {
-            content: '🌙';
-            left: auto;
-            right: 8px;
-        }
-        
         /* Booking System Styles */
         .booking-container {
             display: flex;
@@ -169,11 +38,18 @@
             cursor: pointer;
             color: var(--primary-green);
             font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .month-nav button:hover {
+            transform: scale(1.2);
+            color: var(--accent-color);
         }
         
         .month-title {
             font-size: 1.5rem;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
             color: var(--primary-green);
             min-width: 180px;
             text-align: center;
@@ -184,16 +60,19 @@
             border-collapse: collapse;
             background-color: var(--card-bg);
             color: var(--dark-text);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--glass-border);
         }
         
         .calendar th {
-            background-color: var(--secondary-blue);
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-green));
             color: var(--light-text);
-            padding: 0.8rem;
+            padding: 1rem;
             text-align: center;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
         }
         
         .calendar td {
@@ -203,20 +82,23 @@
             width: 14.28%;
             vertical-align: top;
             position: relative;
+            transition: all 0.3s ease;
         }
         
         .date-cell {
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: all 0.3s ease;
         }
         
         .date-number {
-            padding: 0.3rem 0.5rem;
+            padding: 0.5rem;
             font-weight: 600;
             color: var(--dark-text);
             text-align: right;
-            background-color: rgba(0,0,0,0.03);
+            background-color: rgba(0,0,0,0.05);
+            font-family: 'Montserrat', sans-serif;
         }
         
         .date-cell.other-month .date-number {
@@ -225,7 +107,7 @@
         }
         
         .date-cell.today .date-number {
-            background-color: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue));
             color: var(--light-text);
         }
         
@@ -237,43 +119,50 @@
         .date-cell:not(.disabled):hover {
             background-color: var(--light-blue);
             cursor: pointer;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .time-slots {
-            padding: 0.3rem;
+            padding: 0.5rem;
             overflow-y: auto;
             flex-grow: 1;
         }
         
         .time-slot {
             font-size: 0.8rem;
-            padding: 0.3rem 0.5rem;
-            margin-bottom: 0.3rem;
-            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 0.4rem;
+            border-radius: 8px;
             background-color: var(--light-green);
             color: var(--dark-text);
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s ease;
         }
         
         .time-slot.available {
             background-color: var(--light-green);
+            border-left: 3px solid var(--primary-green);
         }
         
         .time-slot.available:hover {
             background-color: var(--primary-green);
             color: var(--light-text);
+            transform: translateX(3px);
         }
         
         .time-slot.booked {
             background-color: var(--light-blue);
+            border-left: 3px solid var(--secondary-blue);
         }
         
         .time-slot.booked:hover {
             background-color: var(--secondary-blue);
             color: var(--light-text);
+            transform: translateX(3px);
         }
         
         /* Booking Modal */
@@ -284,37 +173,66 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.7);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
             background-color: var(--card-bg);
             width: 90%;
             max-width: 500px;
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             position: relative;
+            border: 1px solid var(--glass-border);
+            animation: modalFadeIn 0.5s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .close-modal {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: none;
+            background: var(--glass-bg);
             border: none;
             font-size: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             cursor: pointer;
             color: var(--medium-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: var(--light-text);
+            background-color: rgba(255, 0, 0, 0.2);
+            transform: rotate(90deg);
         }
         
         .modal-title {
             margin-top: 0;
             color: var(--primary-green);
             margin-bottom: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
         }
         
         .booking-details {
@@ -326,10 +244,13 @@
         .booking-details p {
             margin: 0.5rem 0;
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
         }
         
-        .booking-form .form-group {
-            margin-bottom: 1rem;
+        .booking-details p strong {
+            min-width: 70px;
+            color: var(--primary-green);
         }
         
         /* Service Selection Cards */
@@ -342,25 +263,30 @@
         
         .service-card {
             border: 2px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 1rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            background-color: var(--card-bg);
         }
         
         .service-card:hover {
             border-color: var(--primary-green);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
         
         .service-card.selected {
             border-color: var(--primary-green);
             background-color: var(--light-green);
+            transform: scale(1.05);
         }
         
         .service-card h4 {
             margin-top: 0;
             color: var(--dark-text);
+            font-family: 'Poppins', sans-serif;
         }
         
         .service-card .price {
@@ -419,6 +345,7 @@
     </style>
 </head>
 <body>
+
     <header>
         <div class="header-content container">
             <div class="logo-container">
@@ -435,13 +362,7 @@
             </nav>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider"></div>
-                </label>
-            </div>
-            <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" checked />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -492,26 +413,10 @@
 
             <div class="packages">
                 <div class="package-card">
-                    <h3>Solo Soccer Training</h3>
-                    <div class="price">$80</div>
-                    <p>One-on-one soccer training focused on your specific position and skills.</p>
-                    <div class="package-details">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>60-minute personalized session</li>
-                            <li>Video analysis (optional add-on)</li>
-                            <li>Skill-specific technical drills</li>
-                            <li>Position-based tactical insights</li>
-                            <li>Performance tracking & feedback</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="package-card">
-                    <h3>Personal Training</h3>
+                    <h3>Fitness/Personal Training</h3>
                     <div class="price">$75</div>
-                    <p>Custom fitness training designed for your body type and athletic goals.</p>
-                     <div class="package-details">
+                    <p>Custom fitness program designed for your body type and athletic goals.</p>
+                    <div class="package-details">
                         <h4>What's Included:</h4>
                         <ul>
                             <li>60-minute personalized workout</li>
@@ -519,6 +424,22 @@
                             <li>Progress monitoring</li>
                             <li>Customized workout plan</li>
                             <li>Recovery & nutrition guidance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="package-card">
+                    <h3>Soccer (2 Person Group)</h3>
+                    <div class="price">$75 <span class="per">per person</span></div>
+                    <p>Train with a partner to enhance skills, tactics, and game understanding.</p>
+                     <div class="package-details">
+                        <h4>What's Included:</h4>
+                        <ul>
+                            <li>60-minute training session</li>
+                            <li>Skill development drills</li>
+                            <li>Partner exercises</li>
+                            <li>Tactical awareness training</li>
+                            <li>Game situation practice</li>
                         </ul>
                     </div>
                 </div>
@@ -563,13 +484,13 @@
             
             <h4>Select Service:</h4>
             <div class="service-selection">
-                <div class="service-card" data-service="solo-soccer">
-                    <h4>Solo Soccer</h4>
-                    <div class="price">$80</div>
-                </div>
                 <div class="service-card" data-service="personal-training">
-                    <h4>Personal Training</h4>
+                    <h4>Fitness/Personal</h4>
                     <div class="price">$75</div>
+                </div>
+                <div class="service-card" data-service="soccer-group">
+                    <h4>Soccer (2 Person Group)</h4>
+                    <div class="price">$75<small>/person</small></div>
                 </div>
                 <div class="service-card" data-service="team-training">
                     <h4>Team Training</h4>
@@ -595,7 +516,7 @@
                 
                 <div class="form-group" id="teamSizeGroup" style="display: none;">
                     <label for="teamSize">Number of Participants</label>
-                    <input type="number" id="teamSize" name="teamSize" min="4" value="4">
+                    <input type="number" id="teamSize" name="teamSize" min="2" value="2">
                 </div>
                 
                 <div class="form-group">
@@ -620,316 +541,5 @@
              <p>Based in Waterbury, Connecticut</p>
         </div>
     </footer>
-
-    <script>
-        // Dark mode toggle functionality
-        const toggleSwitch = document.querySelector('#checkbox');
-        
-        // Check for saved theme preference
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            toggleSwitch.checked = true;
-        }
-        
-        // Event listener for theme switch
-        toggleSwitch.addEventListener('change', switchTheme);
-        
-        function switchTheme(e) {
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-        
-        // Booking Calendar Functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize variables
-            let currentDate = new Date();
-            let selectedDate = null;
-            let selectedTimeSlot = null;
-            
-            // Generate availability data (in a real app, this would come from a backend)
-            const availabilityData = generateAvailabilityData();
-            
-            // Initialize calendar
-            renderCalendar(currentDate);
-            
-            // Event listeners
-            document.getElementById('prevMonth').addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                renderCalendar(currentDate);
-            });
-            
-            document.getElementById('nextMonth').addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                renderCalendar(currentDate);
-            });
-            
-            document.getElementById('todayBtn').addEventListener('click', function() {
-                currentDate = new Date();
-                renderCalendar(currentDate);
-            });
-            
-            // Modal Controls
-            document.getElementById('closeModal').addEventListener('click', function() {
-                document.getElementById('bookingModal').style.display = 'none';
-            });
-            
-            window.addEventListener('click', function(event) {
-                if (event.target === document.getElementById('bookingModal')) {
-                    document.getElementById('bookingModal').style.display = 'none';
-                }
-            });
-            
-            // Service Selection
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    // Remove selected class from all cards
-                    serviceCards.forEach(c => c.classList.remove('selected'));
-                    
-                    // Add selected class to clicked card
-                    this.classList.add('selected');
-                    
-                    // Show/hide team size input based on service
-                    const service = this.getAttribute('data-service');
-                    document.getElementById('teamSizeGroup').style.display = 
-                        service === 'team-training' ? 'block' : 'none';
-                });
-            });
-            
-            // Form submission
-            document.getElementById('bookingForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Here you would typically send the data to a backend
-                // For this demo, we'll just show an alert
-                alert('Booking confirmed! You will receive a confirmation email shortly.');
-                
-                // Close the modal
-                document.getElementById('bookingModal').style.display = 'none';
-            });
-            
-            // Generate calendar
-            function renderCalendar(date) {
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                
-                // Update month title
-                document.getElementById('currentMonth').textContent = 
-                    new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(date);
-                
-                // Get first day of month and last day of month
-                const firstDay = new Date(year, month, 1);
-                const lastDay = new Date(year, month + 1, 0);
-                
-                // Get the day of the week for the first day (0 = Sunday, 6 = Saturday)
-                const firstDayIndex = firstDay.getDay();
-                
-                // Get total days in the month
-                const totalDays = lastDay.getDate();
-                
-                // Get total days from previous month to show
-                const prevMonthDays = firstDayIndex;
-                
-                // Get total days from next month to show (to fill 6 rows)
-                const totalCells = 42; // 6 rows * 7 days
-                const nextMonthDays = totalCells - (prevMonthDays + totalDays);
-                
-                // Get last day of previous month
-                const prevMonthLastDay = new Date(year, month, 0).getDate();
-                
-                // Get today's date for highlighting
-                const today = new Date();
-                const todayFormatted = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-                
-                // Generate calendar HTML
-                let calendarHTML = '';
-                
-                // Previous month days
-                for (let i = prevMonthDays - 1; i >= 0; i--) {
-                    const day = prevMonthLastDay - i;
-                    const date = new Date(year, month - 1, day);
-                    const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-                    
-                    calendarHTML += `<td>
-                        <div class="date-cell other-month disabled" data-date="${dateFormatted}">
-                            <div class="date-number">${day}</div>
-                            <div class="time-slots"></div>
-                        </div>
-                    </td>`;
-                }
-                
-                // Current month days
-                for (let i = 1; i <= totalDays; i++) {
-                    const date = new Date(year, month, i);
-                    const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-                    
-                    // Check if the date is in the past
-                    const isPast = date < new Date(today.setHours(0,0,0,0));
-                    
-                    // Get availability for this date
-                    const availability = availabilityData[dateFormatted] || [];
-                    
-                    // Create time slots HTML
-                    let timeSlotsHTML = '';
-                    availability.forEach(slot => {
-                        timeSlotsHTML += `
-                            <div class="time-slot ${slot.available ? 'available' : 'booked'}" 
-                                 data-time="${slot.time}" 
-                                 data-available="${slot.available}">
-                                ${slot.time} ${slot.available ? '<span>Available</span>' : '<span>Booked</span>'}
-                            </div>
-                        `;
-                    });
-                    
-                    // Create the cell HTML
-                    const cellClass = `date-cell ${dateFormatted === todayFormatted ? 'today' : ''} ${isPast ? 'disabled' : ''} ${availability.length > 0 ? 'has-slots' : ''}`;
-                    
-                    calendarHTML += `<td>
-                        <div class="${cellClass}" data-date="${dateFormatted}">
-                            <div class="date-number">${i}</div>
-                            <div class="time-slots">${timeSlotsHTML}</div>
-                        </div>
-                    </td>`;
-                    
-                    // Start a new row after Saturday (6)
-                    if ((firstDayIndex + i) % 7 === 0) {
-                        calendarHTML += '</tr><tr>';
-                    }
-                }
-                
-                // Next month days
-                for (let i = 1; i <= nextMonthDays; i++) {
-                    const date = new Date(year, month + 1, i);
-                    const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-                    
-                    calendarHTML += `<td>
-                        <div class="date-cell other-month disabled" data-date="${dateFormatted}">
-                            <div class="date-number">${i}</div>
-                            <div class="time-slots"></div>
-                        </div>
-                    </td>`;
-                    
-                    // Start a new row if needed
-                    if ((firstDayIndex + totalDays + i) % 7 === 0 && i < nextMonthDays) {
-                        calendarHTML += '</tr><tr>';
-                    }
-                }
-                
-                // Insert the calendar HTML
-                document.getElementById('calendarBody').innerHTML = `<tr>${calendarHTML}</tr>`;
-                
-                // Add event listeners to date cells
-                document.querySelectorAll('.date-cell:not(.disabled)').forEach(cell => {
-                    cell.addEventListener('click', function(e) {
-                        const timeSlotClicked = e.target.closest('.time-slot');
-                        
-                        if (timeSlotClicked && timeSlotClicked.getAttribute('data-available') === 'true') {
-                            // Time slot was clicked
-                            selectedTimeSlot = timeSlotClicked.getAttribute('data-time');
-                            selectedDate = this.getAttribute('data-date');
-                            
-                            // Update modal content
-                            const dateParts = selectedDate.split('-');
-                            const formattedDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]), parseInt(dateParts[2]));
-                            
-                            document.getElementById('bookingDate').textContent = 
-                                new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(formattedDate);
-                            document.getElementById('bookingTime').textContent = selectedTimeSlot;
-                            
-                            // Open modal
-                            document.getElementById('bookingModal').style.display = 'flex';
-                        }
-                    });
-                });
-            }
-            
-            // Generate availability data (mock data for demonstration)
-            function generateAvailabilityData() {
-                const data = {};
-                const today = new Date();
-                
-                // Generate data for the next 60 days
-                for (let i = 0; i < 60; i++) {
-                    const date = new Date(today);
-                    date.setDate(today.getDate() + i);
-                    
-                    // Skip Sundays
-                    if (date.getDay() === 0 && i > 7) continue;
-                    
-                    const dateFormatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-                    
-                    // Generate time slots based on day of week
-                    const slots = [];
-                    
-                    // Monday-Thursday
-                    if (date.getDay() >= 1 && date.getDay() <= 4) {
-                        // Morning slots
-                        slots.push({ time: '8:00 AM - 9:00 AM', available: Math.random() > 0.3 });
-                        slots.push({ time: '9:00 AM - 10:00 AM', available: Math.random() > 0.3 });
-                        slots.push({ time: '10:00 AM - 11:00 AM', available: Math.random() > 0.3 });
-                        slots.push({ time: '11:00 AM - 12:00 PM', available: Math.random() > 0.3 });
-                        
-                        // Afternoon slots
-                        slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
-                        
-                        // Evening slots
-                        slots.push({ time: '6:00 PM - 7:00 PM', available: Math.random() > 0.5 });
-                        slots.push({ time: '7:00 PM - 8:00 PM', available: Math.random() > 0.5 });
-                        slots.push({ time: '8:00 PM - 9:00 PM', available: Math.random() > 0.5 });
-                    }
-                    // Friday
-                    else if (date.getDay() === 5) {
-                        // Morning slots
-                        slots.push({ time: '8:00 AM - 9:00 AM', available: Math.random() > 0.3 });
-                        slots.push({ time: '9:00 AM - 10:00 AM', available: Math.random() > 0.3 });
-                        slots.push({ time: '10:00 AM - 11:00 AM', available: Math.random() > 0.3 });
-                        slots.push({ time: '11:00 AM - 12:00 PM', available: Math.random() > 0.3 });
-                        
-                        // Afternoon slots
-                        slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
-                        
-                        // Evening slots
-                        slots.push({ time: '6:00 PM - 7:00 PM', available: Math.random() > 0.5 });
-                        slots.push({ time: '7:00 PM - 8:00 PM', available: Math.random() > 0.5 });
-                    }
-                    // Saturday
-                    else if (date.getDay() === 6) {
-                        // Morning slots
-                        slots.push({ time: '9:00 AM - 10:00 AM', available: Math.random() > 0.5 });
-                        slots.push({ time: '10:00 AM - 11:00 AM', available: Math.random() > 0.5 });
-                        slots.push({ time: '11:00 AM - 12:00 PM', available: Math.random() > 0.5 });
-                        slots.push({ time: '12:00 PM - 1:00 PM', available: Math.random() > 0.5 });
-                        
-                        // Afternoon slots
-                        slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
-                    }
-                    // Sunday
-                    else if (date.getDay() === 0) {
-                        // Only afternoon slots
-                        slots.push({ time: '1:00 PM - 2:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '2:00 PM - 3:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '3:00 PM - 4:00 PM', available: Math.random() > 0.3 });
-                        slots.push({ time: '4:00 PM - 5:00 PM', available: Math.random() > 0.3 });
-                    }
-                    
-                    data[dateFormatted] = slots;
-                }
-                
-                return data;
-            }
-        });
-    </script>
 </body>
 </html>

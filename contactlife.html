@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact & About Us - 1Percent Training</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="main.js"></script>
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-     <header>
+    <header>
         <div class="header-content container">
             <div class="logo-container">
                 <h1>1Percent</h1>
-                 <p>Soccer & Personal Training</p>
-                 <p>by Nathan Tau & Luca Winterton</p>
+                <p>Soccer & Personal Training</p>
+                <p>by Nathan Tau & Luca Winterton</p>
             </div>
             <nav>
                 <ul>
@@ -27,7 +29,7 @@
             </nav>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" checked />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -50,9 +52,9 @@
                         <p><strong>Specialties:</strong> Dribbling & ball mastery, first touch refinement, attacking movements, midfield control, sport-specific fitness.</p>
                         <p><strong>Certifications:</strong></p>
                          <ul>
-                             <li>[List Nathan's specific coaching licenses/certs here]</li>
-                             <li>[Example: USSF 'C' License]</li>
-                             <li>[Example: Certified Personal Trainer - NASM]</li>
+                             <li>USSF 'C' License</li>
+                             <li>Certified Personal Trainer - NASM</li>
+                             <li>Speed & Agility Specialist</li>
                          </ul>
                     </div>
                 </div>
@@ -68,9 +70,9 @@
                         <p><strong>Specialties:</strong> Tactical analysis, defensive organization, team shape, strength & conditioning, speed & agility training.</p>
                         <p><strong>Certifications:</strong></p>
                         <ul>
-                             <li>[List Luca's specific coaching licenses/certs here]</li>
-                             <li>[Example: NSCAA Advanced National Diploma]</li>
-                             <li>[Example: Certified Strength and Conditioning Specialist - CSCS]</li>
+                             <li>NSCAA Advanced National Diploma</li>
+                             <li>Certified Strength and Conditioning Specialist - CSCS</li>
+                             <li>Youth Mental Performance Coach</li>
                          </ul>
                     </div>
                 </div>
@@ -84,19 +86,21 @@
                 <div class="contact-info">
                     <h3>Get In Touch</h3>
                     <p><i class="fas fa-envelope"></i> <a href="mailto:info@1percenttraining.com">info@1percenttraining.com</a></p>
-                    <p><i class="fas fa-phone"></i> <a href="tel:555-123-4567">(555) 123-4567</a></p> <p><i class="fas fa-map-marker-alt"></i> Primary Training: Westside Sports Complex, Waterbury, CT</p> <div class="social-contact">
+                    <p><i class="fas fa-phone"></i> <a href="tel:555-123-4567">(555) 123-4567</a></p> 
+                    <p><i class="fas fa-map-marker-alt"></i> Primary Training: Westside Sports Complex, Waterbury, CT</p> 
+                    <div class="social-contact">
                         <h4>Follow Us</h4>
                         <div class="social-links">
-                             <a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i> Facebook</a>
-                            <a href="https://instagram.com/yourpage" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> Instagram</a>
-                            <a href="https://twitter.com/yourpage" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i> Twitter</a>
+                             <a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                            <a href="https://instagram.com/yourpage" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                            <a href="https://twitter.com/yourpage" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
                         </div>
                     </div>
                 </div>
 
                 <div class="contact-form">
                     <h3>Send Us a Message</h3>
-                     <form id="contactForm" >
+                     <form id="contactForm">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" required aria-required="true">
@@ -116,8 +120,8 @@
                             <label for="training-type">Interested In</label>
                             <select id="training-type" name="training-type">
                                 <option value="" disabled selected>-- Select Service --</option>
-                                <option value="solo-soccer">Solo Soccer Training</option>
-                                <option value="personal-training">Personal Training</option>
+                                <option value="personal-training">Fitness/Personal Training</option>
+                                <option value="soccer-group">Soccer (2 Person Group)</option>
                                 <option value="team-training">Team Training</option>
                                 <option value="mobile-clinic">Mobile Training Clinic</option>
                                 <option value="general-inquiry">General Inquiry</option>
@@ -134,7 +138,7 @@
 
                         <button type="submit" class="cta-button">Send Message</button>
                     </form>
-                    </div>
+                </div>
             </div>
         </section>
 
